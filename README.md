@@ -5,7 +5,7 @@
 ![image](https://github.com/tirtha-v/eXplainable_AI/assets/120706146/04abd2fd-9308-4c35-a2b0-ed6f4ea74839)
 
 
-This approach achieves explainability for ML models through post-hoc SHAP analysis and Symbolic Regression. This method highlights the importance and correlations of features. By merging ML techniques with XAI, we bridge the gap between data-driven methods and domain-specific knowledge, aiming to elucidate the intricate relationship between input structural features and adsorption energy.
+This approach achieves explainability for ML models through post-hoc SHAP analysis and Symbolic Regression. By merging ML techniques with XAI, we bridge the gap between data-driven methods and domain-specific knowledge, aiming to elucidate the intricate relationship between input structural features and adsorption energy.
 
 ## Key Features:
 
