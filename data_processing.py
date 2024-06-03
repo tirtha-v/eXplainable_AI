@@ -1,46 +1,63 @@
-""" 
-Data processing task for the OC20 dataset, we need to perform the following steps:
-1. Extract systems containing O, H, and C1 adsorbates.
-2. Extract the last frames of the given systems with multiple trajectories.
-"""
-
 
 def extract_post_hoc_data(data):
+    """
+    Extract systems with only O, H, and C1 category adsorbates.
+
+    Parameters:
+    data (list): List of system objects.
+
+    Returns:
+    list: List of filtered system objects with only O, H, and C1 adsorbates.
+    """
     req_data = []
-    for j in range(len(data)):
-        req_data = list(req_data)
-        count_carbon = list(data[j].atomic_numbers).count(6)
-        tags = list(data[j].tags.detach().numpy())
-        atomic_numbers = data[j].atomic_numbers.detach().numpy()
+    for system in data:
+        carbon_count = list(system.atomic_numbers).count(6)
+        tags = list(system.tags.detach().numpy())
+        atomic_numbers = system.atomic_numbers.detach().numpy()
         indices = [i for i, x in enumerate(tags) if x == 2]
-        if (
-            all(item in [1, 6, 8] for item in atomic_numbers[indices])
-            and count_carbon <= 1
-        ):
-            req_data.append(data[j])
+
+        if all(item in [1, 6, 8] for item in atomic_numbers[indices]) and carbon_count <= 1:
+            req_data.append(system)
 
     return req_data
 
 
 def extract_sr_data(data):
+    """
+    Extract systems with only H adsorbates.
+
+    Parameters:
+    data (list): List of system objects.
+
+    Returns:
+    list: List of filtered system objects with only H adsorbates.
+    """
     req_data = []
-    for j in range(len(data)):
-        req_data = list(req_data)
-        tags = list(data[j].tags.detach().numpy())
-        atomic_numbers = data[j].atomic_numbers.detach().numpy()
+    for system in data:
+        tags = list(system.tags.detach().numpy())
+        atomic_numbers = system.atomic_numbers.detach().numpy()
         indices = [i for i, x in enumerate(tags) if x == 2]
+
         if all(item in [1] for item in atomic_numbers[indices]):
-            req_data.append(data[j])
+            req_data.append(system)
+
     return req_data
 
 
 def extract_last_frame(req_data):
+    """
+    Extract the last frame id (fid) from each system id (sid).
+
+    Parameters:
+    req_data (list): List of filtered system objects.
+
+    Returns:
+    dict: Dictionary mapping system ID to the last frame ID.
+    """
     sid_list = set(item.sid for item in req_data)
-    last_frames = {
-        u_sid: max(item.fid for item in req_data if item.sid == u_sid)
-        for u_sid in tqdm(sid_list)
-    }
+    last_frames = {sid: max(item.fid for item in req_data if item.sid == sid) for sid in tqdm(sid_list)}
     return last_frames
+
 
 
 def get_material_data(mapping_path, api_key):
@@ -55,13 +72,13 @@ def get_material_data(mapping_path, api_key):
     tuple: A tuple containing summary and electronic structure data.
     """
     # Load data from the pickle file
-    with open(mapping_path, "rb") as file:
+    with open(mapping_path, 'rb') as file:
         mapping = pickle.load(file)
 
     # Extract SID and corresponding mp-ids
     mp_sid_dict = {}
     for sid, info in mapping.items():
-        mp_sid_dict[sid] = info["bulk_mpid"]
+        mp_sid_dict[sid] = info['bulk_mpid']
 
     mpid_list = list(mp_sid_dict.values())
 
@@ -69,4 +86,4 @@ def get_material_data(mapping_path, api_key):
         summary = mpr.materials.summary.search(material_ids=mpid_list)
         electronic = mpr.materials.electronic_structure.search(material_ids=mpid_list)
 
-    return summary, electronic
+    return summary, electronic, mp_sid_dict
