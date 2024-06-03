@@ -76,9 +76,7 @@ def get_ads_e(data):
         if ads_electro:
             avg_elec_adsorbate[system.sid] = mean(ads_electro)
         else:
-            avg_elec_adsorbate[
-                system.sid
-            ] = None  # Handle case with no adsorbates
+            avg_elec_adsorbate[system.sid] = None  # Handle case with no adsorbates
 
     return avg_elec_adsorbate
 
@@ -143,9 +141,7 @@ def get_eff_coord(data):
         atom_obj = SiteAnalyzer(atoms)
 
         # Check for the presence of slab atoms
-        check_slab = np.count_nonzero(
-            atom_obj._find_binding_atoms_from_center()
-        )
+        check_slab = np.count_nonzero(atom_obj._find_binding_atoms_from_center())
 
         if check_slab != 0:
             # Get the slab atom indices
@@ -218,9 +214,7 @@ def get_sum_atomic_adsorbate(data):
 
     for item in tqdm(data):
         atom_sum = sum(
-            item.atomic_numbers[i]
-            for i in range(item.natoms)
-            if item.tags[i] == 2
+            item.atomic_numbers[i] for i in range(item.natoms) if item.tags[i] == 2
         )
         sum_atomic_adsorbate[item.sid] = atom_sum
 

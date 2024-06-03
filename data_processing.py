@@ -55,8 +55,6 @@ def get_material_data(mapping_path, api_key):
 
     with MPRester(api_key=api_key) as mpr:
         summary = mpr.materials.summary.search(material_ids=mpid_list)
-        electronic = mpr.materials.electronic_structure.search(
-            material_ids=mpid_list
-        )
+        electronic = mpr.materials.electronic_structure.search(material_ids=mpid_list)
 
     return summary, electronic

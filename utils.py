@@ -49,9 +49,7 @@ class SiteAnalyzer:
         # breakpoint()
         elements = self.atoms.get_chemical_symbols()
         adsorbate_atom_idxs = [idx for idx, tag in enumerate(tags) if tag == 2]
-        adsorbate_atom_positions = self.atoms.get_positions()[
-            adsorbate_atom_idxs
-        ]
+        adsorbate_atom_positions = self.atoms.get_positions()[adsorbate_atom_idxs]
         center_position = np.mean(adsorbate_atom_positions, axis=0)
         all_distance = [
             euclidean(center_position, position)
@@ -74,9 +72,7 @@ class SiteAnalyzer:
         # convert Atom object to Atoms object which is iterable
         # center_atom = Atoms()
         # center_atom.append(self.center_atom)
-        connectivity = self._get_connectivity(
-            self.atoms, self.cutoff_multiplier
-        )
+        connectivity = self._get_connectivity(self.atoms, self.cutoff_multiplier)
         binding_info = []
         adslab_positions = self.atoms.get_positions()
         # breakpoint()
@@ -103,9 +99,7 @@ class SiteAnalyzer:
     def _find_second_binding_graph(self):
         tags = self.atoms.get_tags()
         elements = self.atoms.get_chemical_symbols()
-        connectivity = self._get_connectivity(
-            self.atoms, self.cutoff_multiplier
-        )
+        connectivity = self._get_connectivity(self.atoms, self.cutoff_multiplier)
         second_binding_info = {}
         for interaction in self.binding_info:
             slab_atom_idxs = interaction["slab_atom_idxs"]
@@ -132,9 +126,7 @@ class SiteAnalyzer:
         elements = self.atoms.get_chemical_symbols()
         adsorbate_atom_idxs = [idx for idx, tag in enumerate(tags) if tag == 2]
         slab_atom_idxs = [idx for idx, tag in enumerate(tags) if tag != 2]
-        connectivity = self._get_connectivity(
-            self.atoms, self.cutoff_multiplier
-        )
+        connectivity = self._get_connectivity(self.atoms, self.cutoff_multiplier)
         binding_info = []
         adslab_positions = self.atoms.get_positions()
         for idx in adsorbate_atom_idxs:
@@ -177,9 +169,7 @@ class SiteAnalyzer:
             skin=0.05,
         )
         neighbor_list.update(atoms)
-        matrix = neighborlist.get_connectivity_matrix(
-            neighbor_list.nl
-        ).toarray()
+        matrix = neighborlist.get_connectivity_matrix(neighbor_list.nl).toarray()
         return matrix
 
     def get_dentate(self):
@@ -197,9 +187,7 @@ class SiteAnalyzer:
         Returns:
             (list[int]): number of interacting surface atoms for each adsorbate atom bound.
         """
-        return [
-            len(binding["slab_atom_idxs"]) for binding in self.binding_info
-        ]
+        return [len(binding["slab_atom_idxs"]) for binding in self.binding_info]
 
     def get_center_site_type(self):
         """
@@ -208,10 +196,7 @@ class SiteAnalyzer:
         Returns:
             (list[int]): number of interacting surface atoms for each adsorbate atom bound.
         """
-        return [
-            len(binding["slab_atom_idxs"])
-            for binding in self.center_binding_info
-        ]
+        return [len(binding["slab_atom_idxs"]) for binding in self.center_binding_info]
 
     def get_bound_atom_positions(self):
         """
@@ -241,9 +226,7 @@ class SiteAnalyzer:
         if len(this_positions) > 0 and len(other_positions) > 0:
             for this_position in this_positions:
                 for other_position in other_positions:
-                    fake_atoms = Atoms(
-                        "CO", positions=[this_position, other_position]
-                    )
+                    fake_atoms = Atoms("CO", positions=[this_position, other_position])
                     distances.append(fake_atoms.get_distance(0, 1, mic=True))
             return min(distances)
         else:
