@@ -5,7 +5,7 @@ Data processing task for the OC20 dataset, we need to perform the following step
 """
 
 
-def extract_data(data):
+def extract_post_hoc_data(data):
     req_data = []
     for j in range(len(data)):
         req_data = list(req_data)
@@ -19,6 +19,18 @@ def extract_data(data):
         ):
             req_data.append(data[j])
 
+    return req_data
+
+
+def extract_sr_data(data):
+    req_data = []
+    for j in range(len(data)):
+        req_data = list(req_data)
+        tags = list(data[j].tags.detach().numpy())
+        atomic_numbers = data[j].atomic_numbers.detach().numpy()
+        indices = [i for i, x in enumerate(tags) if x == 2]
+        if all(item in [1] for item in atomic_numbers[indices]):
+            req_data.append(data[j])
     return req_data
 
 
